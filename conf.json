@@ -1,0 +1,36 @@
+{
+  "train":{
+    "image_size": [512, 512],
+    "discriminator_image_size": [256, 256],
+    "train_data_dir": "G:\\image_enhance_dataset\\validation\\GT_IMAGES",
+    "valid_data_dir": "G:\\image_enhance_dataset\\validation\\GT_IMAGES2",
+    "batch_size": 2,
+    "init_lr": 0.0001,
+    "final_lr": 0.000005,
+    "weight_decay": 0.0005,
+    "discriminator_weight_decay": 0.0005,
+    "discriminator_init_lr": 0.00001,
+    "discriminator_final_lr": 0.000005,
+    "epochs": 1000,
+    "begin_use_adv_loss_epoch": 200,
+    "CUDA_VISIBLE_DEVICES": "0",
+    "num_workers": 2,
+    "model_save_dir": "./save_model",
+    "laplacian_level_count": 4,
+    "layer_count_of_every_unet": [4, 3, 3, 3],
+    "first_layer_out_channels_of_every_unet": [24, 24, 24, 16],
+    "color_jitter_brightness": 0.8,
+    "color_jitter_saturation": 0.8
+  },
+  "predict":
+  {
+    "img_pth": "G:\\loncin_robot_frames\\4_frame\\12.jpg",
+    "image_size": [512, 512],
+    "result_output_dir": "./results",
+    "pretrained_model": "./save_model/best.pth",
+    "laplacian_level_count": 4,
+    "layer_count_of_every_unet": [4, 3, 3, 3],
+    "first_layer_out_channels_of_every_unet": [24, 24, 24, 16],
+    "show_result": false
+  }
+}
