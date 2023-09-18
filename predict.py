@@ -52,10 +52,11 @@ def main():
             _img_pth = os.path.join(img_pth, img_name)
             print(_img_pth)
             laplacian_pyr, original_h, original_w = load_one_img(_img_pth)
-            inference(laplacian_pyr, original_h, original_w, model, "%s.png" % ".".join(img_name.split(".")[:-1]))
+            inference(laplacian_pyr, original_h, original_w, model, "%s.png" % (".".join(img_name.split(".")[:-1]),))
     else:
         laplacian_pyr, original_h, original_w = load_one_img(img_pth)
         inference(laplacian_pyr, original_h, original_w, model, "result.png")
+
 
 if __name__ == "__main__":
     conf = json.load(open("conf.json", "r", encoding="utf-8"))
