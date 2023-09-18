@@ -31,7 +31,7 @@ def load_model():
     return model
 
 
-def inference(laplacian_pyr, original_h, original_w, model):
+def inference(laplacian_pyr, original_h, original_w, model, img_name):
     with t.no_grad():
         model_out = model(laplacian_pyr)
         result = model_out[-1][0].cpu().detach()
@@ -42,14 +42,20 @@ def inference(laplacian_pyr, original_h, original_w, model):
             cv2.imshow("reconstruct_image_size", result_before_resize)
             cv2.imshow("reconstruct_original_size", result)
             cv2.waitKey()
-        cv2.imwrite(os.path.join(result_output_dir, "result.png"), result)
+        cv2.imwrite(os.path.join(result_output_dir, img_name), result)
 
 
 def main():
-    laplacian_pyr, original_h, original_w = load_one_img(img_pth)
     model = load_model()
-    inference(laplacian_pyr, original_h, original_w, model)
-
+    if os.path.isdir(img_pth):
+        for img_name in os.listdir(img_pth):
+            _img_pth = os.path.join(img_pth, img_name)
+            print(_img_pth)
+            laplacian_pyr, original_h, original_w = load_one_img(_img_pth)
+            inference(laplacian_pyr, original_h, original_w, model, "%s.png" % ".".join(img_name.split(".")[:-1]))
+    else:
+        laplacian_pyr, original_h, original_w = load_one_img(img_pth)
+        inference(laplacian_pyr, original_h, original_w, model, "result.png")
 
 if __name__ == "__main__":
     conf = json.load(open("conf.json", "r", encoding="utf-8"))
