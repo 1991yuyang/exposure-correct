@@ -1,2 +1,2 @@
 # exposure-correct
-## According to my own understanding, I re-implemented "Learning Multi-Scale Photo Exposure Correction" using pytorch. It should be noted that some details may differ from the original paper.
+## According to my own understanding, I re-implemented "Learning Multi-Scale Photo Exposure Correction" using pytorch. It should be noted that some details may differ from the original paper. The biggest difference from the original paper is in the data preparation part. I only used normally exposed images and changed the exposure of the image by adjusting the brightness and saturation parameters to generate images with abnormal exposure.
