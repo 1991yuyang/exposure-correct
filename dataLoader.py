@@ -22,10 +22,8 @@ class MySet(data.Dataset):
         if is_train:
             self.transformer = T.Compose([
                 RandomCropNew(size=[256, 256], p=0.5),
-                T.RandomRotation(degrees=30),
                 T.RandomVerticalFlip(p=0.5),
-                T.RandomHorizontalFlip(p=0.5),
-                T.RandomPerspective()
+                T.RandomHorizontalFlip(p=0.5)
             ])
 
     def __getitem__(self, index):
