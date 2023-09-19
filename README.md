@@ -8,6 +8,7 @@ data
     ├─train
     └─valid
 ```
-## Parameter Setting
+## Parameter Setting 
+You only need to configure the parameters in the conf.json file. The meaning of the parameters is as follows:
 ## Start Training
 # Predict
