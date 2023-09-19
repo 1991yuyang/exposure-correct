@@ -3,7 +3,8 @@
 # Train 
 ## Data Preparation
 ### You only need to prepare normal exposure images, then divide them into training sets and validation sets and store them in different folders. 
-''' data
+''' 
+data
     ├─train
     └─valid
 '''
