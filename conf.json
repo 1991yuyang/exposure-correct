@@ -19,8 +19,9 @@
     "laplacian_level_count": 4,
     "layer_count_of_every_unet": [4, 3, 3, 3],
     "first_layer_out_channels_of_every_unet": [24, 24, 24, 16],
-    "color_jitter_brightness": 0.8,
-    "color_jitter_saturation": 0.8
+    "color_jitter_brightness": 0.85,
+    "color_jitter_saturation": 0.15,
+    "color_jitter_contrast": 0.15
   },
   "predict":
   {
