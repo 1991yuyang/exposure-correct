@@ -52,3 +52,4 @@ show_result: true will show inference result, false will not show the result
 python predict.py
 ```
 ## Inference Results
+Due to limited computing resources, the original training for 1,000 epochs was forced to interrupt when the training reached the 486th epoch. Therefore, the following performance are the performance when training lasts for 486 epochs.
