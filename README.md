@@ -47,7 +47,7 @@ laplacian_level_count: the number of Laplacian pyramid levels should be consiste
 layer_count_of_every_unet: layers of every sub unet should be consistent with that during training  
 first_layer_out_channels_of_every_unet: the number of output channels of the first layer of each unet encoder should be consistent with that during training  
 show_result: true will show inference result, false will not show the result  
-### Start Predicting 
+### Start Inference 
 ```
 python predict.py
 ```
