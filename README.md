@@ -38,6 +38,15 @@ python train.py
 ```
 ## Predict 
 ### Prediction Parameter Setting 
+img_pth: Image path. if a picture path is passed in, the current picture will be predicted. If a directory is passed in, all images in the directory will be predicted  
+image_size: \[h, w\], the size of the input image during inference  
+use_orig_size: true means using the original image size for inference, false means using the set image_size for inference. It should be noted that the network input image size should be an exponential power of 2. If not, it will be resized  
+result_output_dir: directory for saving inference results  
+pretrained_model: model weight file path used for inference  
+laplacian_level_count: the number of Laplacian pyramid levels should be consistent with that during training  
+layer_count_of_every_unet: layers of every sub unet should be consistent with that during training  
+first_layer_out_channels_of_every_unet: the number of output channels of the first layer of each unet encoder should be consistent with that during training  
+show_result: true will show inference result, false will not show the result  
 ### Start Predicting 
 ```
 python predict.py
