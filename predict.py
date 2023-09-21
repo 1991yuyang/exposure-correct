@@ -20,11 +20,11 @@ def load_one_img(img_pth):
     if not use_orig_size:
         resized_pil_img = resize(pil_img)
     else:
-        if original_w % 2 != 0:
-            _w = original_w - 1
-        if original_h % 2 != 0:
-            _h = original_h - 1
-        if original_w % 2 != 0 or original_h % 2 != 0:
+        if np.log2(original_w) % 2 != 0:
+            _w = 2 ** (int(np.log2(original_w)) + 1)
+        if np.log2(original_h) % 2 != 0:
+            _h = 2 ** (int(np.log2(original_h)) + 1)
+        if np.log2(original_w) % 2 != 0 or np.log2(original_h) % 2 != 0:
             resized_pil_img = F.resize(pil_img, (_h, _w))
         else:
             resized_pil_img = pil_img
