@@ -39,7 +39,7 @@ class PyrLoss(nn.Module):
         losses = []
         for l in range(2, lap_level_count + 1):
             model_output = model_outputs[-l]
-            label = F.interpolate(l_gausian[-l], scale_factor=model_output.size()[-2:])
+            label = F.interpolate(l_gausian[-l], size=model_output.size()[-2:])
             loss = 2 ** (l - 2) * self.L1(model_output, label)
             losses.append(loss.unsqueeze(0))
         total_loss = t.sum(t.cat(losses, dim=0))
