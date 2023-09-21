@@ -27,6 +27,7 @@
   {
     "img_pth": "/content/drive/MyDrive/exposure-correct/test",
     "image_size": [512, 512],
+    "use_orig_size": true,
     "result_output_dir": "/content/drive/MyDrive/exposure-correct/results",
     "pretrained_model": "/content/drive/MyDrive/exposure-correct/save_model/best.pth",
     "laplacian_level_count": 4,

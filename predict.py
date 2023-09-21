@@ -17,7 +17,10 @@ def load_one_img(img_pth):
         cv2.imshow("raw_image_resize", cv2.resize(orig_cv_img, image_size[::-1]))
     pil_img = Image.open(img_pth)
     original_w, original_h = pil_img.size
-    resized_pil_img = resize(pil_img)
+    if not use_orig_size:
+        resized_pil_img = resize(pil_img)
+    else:
+        resized_pil_img = pil_img
     resized_pil_img_bgr = cv2.cvtColor(np.array(resized_pil_img), cv2.COLOR_RGB2BGR)
     laplacian_pyr = [to_tensor(Image.fromarray(cv2.cvtColor(i, cv2.COLOR_BGR2RGB))).unsqueeze(0).cuda(0) for i in generate_laplacian_pyram(resized_pil_img_bgr, laplacian_level_count)[0]]
     return laplacian_pyr, original_h, original_w
@@ -37,7 +40,10 @@ def inference(laplacian_pyr, original_h, original_w, model, img_name):
         result = model_out[-1][0].cpu().detach()
         pil_result = to_pil(result)
         result_before_resize = cv2.cvtColor(np.array(pil_result), cv2.COLOR_RGB2BGR)
-        result = cv2.resize(result_before_resize, (original_w, original_h))
+        if not use_orig_size:
+            result = cv2.resize(result_before_resize, (original_w, original_h))
+        else:
+            result = result_before_resize
         if show_result:
             cv2.imshow("reconstruct_image_size", result_before_resize)
             cv2.imshow("reconstruct_original_size", result)
@@ -73,4 +79,5 @@ if __name__ == "__main__":
     layer_count_of_every_unet = predict_conf["layer_count_of_every_unet"]
     first_layer_out_channels_of_every_unet = predict_conf["first_layer_out_channels_of_every_unet"]
     show_result = predict_conf["show_result"]
+    use_orig_size = predict_conf["use_orig_size"]
     main()
