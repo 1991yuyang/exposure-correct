@@ -7,6 +7,7 @@ import numpy as np
 from model_def import ECNet
 from tools import generate_laplacian_pyram
 import torch as t
+from torchvision.transforms import functional as F
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 
@@ -19,7 +20,14 @@ def load_one_img(img_pth):
     if not use_orig_size:
         resized_pil_img = resize(pil_img)
     else:
-        resized_pil_img = pil_img
+        if original_w % 2 != 0:
+            _w = original_w - 1
+        if original_h % 2 != 0:
+            _h = original_h - 1
+        if original_w % 2 != 0 or original_h % 2 != 0:
+            resized_pil_img = F.resize(pil_img, (_h, _w))
+        else:
+            resized_pil_img = pil_img
     resized_pil_img_bgr = cv2.cvtColor(np.array(resized_pil_img), cv2.COLOR_RGB2BGR)
     laplacian_pyr = [to_tensor(Image.fromarray(cv2.cvtColor(i, cv2.COLOR_BGR2RGB))).unsqueeze(0).cuda(0) for i in generate_laplacian_pyram(resized_pil_img_bgr, laplacian_level_count)[0]]
     return laplacian_pyr, original_h, original_w
@@ -42,7 +50,10 @@ def inference(laplacian_pyr, original_h, original_w, model, img_name):
         if not use_orig_size:
             result = cv2.resize(result_before_resize, (original_w, original_h))
         else:
-            result = result_before_resize
+            if result_before_resize.shape[:2] != (original_h, original_w):
+                result = cv2.resize(result_before_resize, (original_w, original_h))
+            else:
+                result = result_before_resize
         if show_result:
             cv2.imshow("reconstruct_result", result)
             cv2.waitKey()
