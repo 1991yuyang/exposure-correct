@@ -36,8 +36,8 @@ color_jitter_contrast: color jitter parameter contrast, between 0 and 1
 ```
 python train.py
 ```
-## Predict 
-### Prediction Parameter Setting 
+## Inference 
+### Inference Parameter Setting 
 img_pth: Image path. if a picture path is passed in, the current picture will be predicted. If a directory is passed in, all images in the directory will be predicted  
 image_size: \[h, w\], the size of the input image during inference  
 use_orig_size: true means using the original image size for inference, false means using the set image_size for inference. It should be noted that the network input image size should be an exponential power of 2. If not, it will be resized  
@@ -51,3 +51,4 @@ show_result: true will show inference result, false will not show the result
 ```
 python predict.py
 ```
+## Inference Results
