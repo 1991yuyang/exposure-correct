@@ -32,5 +32,8 @@ first_layer_out_channels_of_every_unet: the number of output channels of the fir
 color_jitter_brightness: color jitter parameter brightness, between 0 and 1  
 color_jitter_saturation: color jitter parameter saturation, between 0 and 1  
 color_jitter_contrast: color jitter parameter contrast, between 0 and 1  
-### Start Training
+### Start Training 
+```
+python train.py
+```
 ## Predict
