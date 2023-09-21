@@ -21,7 +21,6 @@ class MySet(data.Dataset):
         self.laplacian_level_count = laplacia_level_count
         if is_train:
             self.transformer = T.Compose([
-                RandomCropNew(size=[256, 256], p=0.5),
                 T.RandomVerticalFlip(p=0.5),
                 T.RandomHorizontalFlip(p=0.5)
             ])
