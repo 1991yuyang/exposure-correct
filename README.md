@@ -8,7 +8,7 @@ data
     ├─train
     └─valid
 ```
-### Parameter Setting 
+### Training Parameter Setting 
 You only need to configure the parameters in the conf.json file. The meaning of the parameters is as follows:  
 image_size: \[h, w\],indicates the image size sent to the main network model (or generative model) during training  
 discriminator_image_size: \[h, w\],indicates the size of the image sent to the discriminator during training  
@@ -36,4 +36,9 @@ color_jitter_contrast: color jitter parameter contrast, between 0 and 1
 ```
 python train.py
 ```
-## Predict
+## Predict 
+### Prediction Parameter Setting 
+### Start Predicting 
+```
+python predict.py
+```
