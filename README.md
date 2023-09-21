@@ -52,7 +52,7 @@ show_result: true will show inference result, false will not show the result
 python predict.py
 ```
 ## Inference Results
-Due to limited computing resources, the original training for 1,000 epochs was forced to interrupt when the training reached the 486th epoch. Therefore, the following performance are the performance when training lasts for 486 epochs.  
+Due to limited computing resources, the original training for 1,000 epochs was forced to interrupt when the training reached the 486th epoch. Therefore, the following performance is the performance during training for 486 epochs. If the training can be completed for 1000 epochs, the performance should be better. 
 ### input
 ![Image text](https://github.com/1991yuyang/exposure-correct/blob/main/test/a0024-_DSC8932_0.JPG)
 ![Image text](https://github.com/1991yuyang/exposure-correct/blob/main/test/a0145-DSC_0009-1_P1.5.JPG)
