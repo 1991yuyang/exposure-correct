@@ -13,8 +13,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 def load_one_img(img_pth):
     orig_cv_img = cv2.imread(img_pth)
     if show_result:
-        cv2.imshow("raw_original_size", orig_cv_img)
-        cv2.imshow("raw_image_resize", cv2.resize(orig_cv_img, image_size[::-1]))
+        cv2.imshow("raw_image", orig_cv_img)
     pil_img = Image.open(img_pth)
     original_w, original_h = pil_img.size
     if not use_orig_size:
@@ -45,8 +44,7 @@ def inference(laplacian_pyr, original_h, original_w, model, img_name):
         else:
             result = result_before_resize
         if show_result:
-            cv2.imshow("reconstruct_image_size", result_before_resize)
-            cv2.imshow("reconstruct_original_size", result)
+            cv2.imshow("reconstruct_result", result)
             cv2.waitKey()
         cv2.imwrite(os.path.join(result_output_dir, img_name), result)
 
