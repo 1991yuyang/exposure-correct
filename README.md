@@ -55,4 +55,11 @@ python predict.py
 Due to limited computing resources, the original training for 1,000 epochs was forced to interrupt when the training reached the 486th epoch. Therefore, the following performance are the performance when training lasts for 486 epochs.  
 ### input
 ![Image text](https://github.com/1991yuyang/exposure-correct/blob/main/test/a0024-_DSC8932_0.JPG)
+![Image text](https://github.com/1991yuyang/exposure-correct/blob/main/test/a0145-DSC_0009-1_P1.5.JPG)
+![Image text](https://github.com/1991yuyang/exposure-correct/blob/main/test/a0113-IMG_1129_N1.5.JPG)
+![Image text](https://github.com/1991yuyang/exposure-correct/blob/main/test/a0125-kme_314_N1.JPG)
 ### output
+![Image text](https://github.com/1991yuyang/exposure-correct/blob/main/results/a0024-_DSC8932_0.png)
+![Image text](https://github.com/1991yuyang/exposure-correct/blob/main/results/a0145-DSC_0009-1_P1.5.png)
+![Image text](https://github.com/1991yuyang/exposure-correct/blob/main/results/a0113-IMG_1129_N1.5.png)
+![Image text](https://github.com/1991yuyang/exposure-correct/blob/main/results/a0125-kme_314_N1.png)
