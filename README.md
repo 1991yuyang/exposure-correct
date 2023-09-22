@@ -32,6 +32,8 @@ first_layer_out_channels_of_every_unet: the number of output channels of the fir
 color_jitter_brightness: color jitter parameter brightness, between 0 and 1  
 color_jitter_saturation: color jitter parameter saturation, between 0 and 1  
 color_jitter_contrast: color jitter parameter contrast, between 0 and 1  
+use_iaff: whether to use iaff attention mechanism  
+iaff_r: channel scaling parameters of iaff attention mechanism
 ### Start Training 
 ```
 python train.py
@@ -47,6 +49,8 @@ laplacian_level_count: the number of Laplacian pyramid levels should be consiste
 layer_count_of_every_unet: layers of every sub unet should be consistent with that during training  
 first_layer_out_channels_of_every_unet: the number of output channels of the first layer of each unet encoder should be consistent with that during training  
 show_result: true will show inference result, false will not show the result  
+use_iaff: whether to use iaff attention mechanism should be consistent with that during training  
+iaff_r: channel scaling parameters of iaff attention mechanism should be consistent with that during training  
 ### Start Inference 
 ```
 python predict.py
