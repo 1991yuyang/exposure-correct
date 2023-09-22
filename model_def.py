@@ -1,6 +1,7 @@
 import torch as t
 from torch import nn
 from torch.nn import functional as F
+from iaff import IAFF
 
 
 class Discriminator(nn.Module):
@@ -153,27 +154,36 @@ class ECNet(nn.Module):
     """
     exposure correction network
     """
-    def __init__(self, laplacian_level_count, layer_count_of_every_unet, first_layer_out_channels_of_every_unet):
+    def __init__(self, laplacian_level_count, layer_count_of_every_unet, first_layer_out_channels_of_every_unet, use_iaff, iaff_r):
         """
 
         :param laplacian_level_count: 拉普拉斯金字塔层数
         :param layer_count_of_every_unet: 每个unet的层数，为列表，列表长度等于laplacian_level_count
         :param first_layer_out_channels_of_every_unet: 每个unet的第一层的输出通道数，为列表，列表长度等于laplacian_level_count
+        :param use_iaff: 是否使用iaff注意力机制
+        :param iaff_r: iaff注意力机制中的参数r
         """
         super(ECNet, self).__init__()
         unets = []
         deconvs = []
+        if use_iaff:
+            iaffs = []
         # bns = []
         self.laplacian_leve_count = laplacian_level_count
+        self.use_iaff = use_iaff
         for i in range(laplacian_level_count):
             layer_count = layer_count_of_every_unet[i]
             first_layer_out_channels = first_layer_out_channels_of_every_unet[i]
             unets.append(Unet(layer_count, first_layer_out_channels, pw_is_bn=not i == (laplacian_level_count - 1)))
             if i != self.laplacian_leve_count - 1:
                 deconvs.append(nn.ConvTranspose2d(in_channels=3, out_channels=3, kernel_size=2, stride=2, padding=0, bias=True))
+                if use_iaff:
+                    iaffs.append(IAFF(in_channels=3, r=iaff_r))
                 # bns.append(nn.BatchNorm2d(num_features=3))
         self.unets = nn.ModuleList(unets)
         self.deconvs = nn.ModuleList(deconvs)
+        if use_iaff:
+            self.iaffs = nn.ModuleList(iaffs)
         # self.bns = nn.ModuleList(bns)
 
     def forward(self, x):
@@ -194,7 +204,10 @@ class ECNet(nn.Module):
                 unet_outs.append(unet_out)
                 # unet_out = self.bns[i](unet_out)
                 # unet_outs.append(unet_out)
-                unet_out = unet_out + x[i + 1]
+                if self.use_iaff:
+                    unet_out = self.iaffs[i](unet_out, x[i + 1])
+                else:
+                    unet_out = unet_out + x[i + 1]
             out_before = unet_out
         unet_out = (t.tanh(unet_out) + 1) / 2
         unet_outs.append(unet_out)  # 每个unet的输出组成的列表，取值范围在0到1之间
@@ -203,14 +216,14 @@ class ECNet(nn.Module):
 
 
 if __name__ == "__main__":
-    d = [t.randn(8, 3, 64, 64), t.randn(8, 3, 128, 128), t.randn(8, 3, 256, 256), t.randn(8, 3, 512, 512)]
-    model = ECNet(4, [4, 3, 3, 3], [24, 24, 24, 16])
+    d = [t.randn(8, 3, 32, 32), t.randn(8, 3, 64, 64), t.randn(8, 3, 128, 128), t.randn(8, 3, 256, 256)]
+    model = ECNet(4, [4, 3, 3, 3], [24, 24, 24, 16], use_iaff=True, iaff_r=0.2)
     disc = Discriminator(256)
     outs = model(d)
     recon = outs
     for out in outs:
         print(out.size())
-    from torch.nn import functional as F
-    result = F.interpolate(recon, (256, 256))
-    dis_out = disc(result)
-    print(dis_out.size())
+    # from torch.nn import functional as F
+    # result = F.interpolate(recon, (256, 256))
+    # dis_out = disc(result)
+    # print(dis_out.size())
