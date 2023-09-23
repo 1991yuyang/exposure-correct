@@ -109,18 +109,25 @@ class PWConv(nn.Module):
 
 class Unet(nn.Module):
 
-    def __init__(self, layer_count, first_layer_out_channels, pw_is_bn):
+    def __init__(self, layer_count, first_layer_out_channels, pw_is_bn, use_iaff, iaff_r):
         """
 
         :param layer_count: unet的层数
         :param first_layer_out_channels: unet的encoder的第一层输出通道数目
         :param pw_is_bn: 最后的1*1卷积是否带bn层，True带bn，False不带
+        :param use_iaff: 是否使用iaff注意力机制
+        :param iaff_r: iaff注意力机制中的参数r
         """
         super(Unet, self).__init__()
+        self.use_iaff = use_iaff
         self.layer_count = layer_count
+        iaff_r *= 20
         encoder = []
         self.middle = ConvBlock(in_channels=2 ** (layer_count - 2) * first_layer_out_channels, out_channels=2 ** (layer_count - 1) * first_layer_out_channels)
         decoder = []
+        if use_iaff:
+            pw_convs = []
+            iaffs = []
         for i in range(layer_count - 1):
             if i == 0:
                 in_channels = 3
@@ -128,19 +135,32 @@ class Unet(nn.Module):
             else:
                 in_channels = out_channels
                 out_channels = 2 ** i * first_layer_out_channels
+            if use_iaff:
+                pw_convs.append(PWConv(in_channels=in_channels, out_channels=out_channels, is_bn=True))
+                iaffs.append(IAFF(in_channels=out_channels, r=iaff_r))
             encoder.append(ConvBlock(in_channels=in_channels, out_channels=out_channels))
             decoder.extend([ConvBlock(in_channels=2 * out_channels, out_channels=out_channels), DeConvBlock(in_channels=out_channels * 2, out_channels=out_channels)])
         decoder.reverse()
         self.encoder = nn.ModuleList(encoder)
         self.decoder = nn.ModuleList(decoder)
         self.pw = PWConv(in_channels=first_layer_out_channels, out_channels=3, is_bn=pw_is_bn)
+        if use_iaff:
+            self.pw_convs = nn.ModuleList(pw_convs)
+            self.iaffs = nn.ModuleList(iaffs)
 
     def forward(self, x):
         encoder_outputs = []
-        for em in self.encoder:
-            x = em(x)
+        if self.use_iaff:
+            x_before = x
+        for i in range(self.layer_count - 1):
+            x = self.encoder[i](x)
+            if self.use_iaff:
+                x_before = self.pw_convs[i](x_before)
+                x = self.iaffs[i](x_before, x)
             encoder_outputs.append(x)
             x = F.max_pool2d(x, kernel_size=2, stride=2)
+            if self.use_iaff:
+                x_before = x
         x = self.middle(x)
         for i in range(0, (self.layer_count - 1) * 2, 2):
             x = self.decoder[i](x)
@@ -174,7 +194,7 @@ class ECNet(nn.Module):
         for i in range(laplacian_level_count):
             layer_count = layer_count_of_every_unet[i]
             first_layer_out_channels = first_layer_out_channels_of_every_unet[i]
-            unets.append(Unet(layer_count, first_layer_out_channels, pw_is_bn=not i == (laplacian_level_count - 1)))
+            unets.append(Unet(layer_count, first_layer_out_channels, pw_is_bn=not i == (laplacian_level_count - 1), use_iaff=use_iaff, iaff_r=iaff_r))
             if i != self.laplacian_leve_count - 1:
                 deconvs.append(nn.ConvTranspose2d(in_channels=3, out_channels=3, kernel_size=2, stride=2, padding=0, bias=True))
                 if use_iaff:
@@ -216,7 +236,7 @@ class ECNet(nn.Module):
 
 
 if __name__ == "__main__":
-    d = [t.randn(8, 3, 32, 32), t.randn(8, 3, 64, 64), t.randn(8, 3, 128, 128), t.randn(8, 3, 256, 256)]
+    d = [t.randn(4, 3, 64, 64), t.randn(4, 3, 128, 128), t.randn(4, 3, 256, 256), t.randn(4, 3, 512, 512)]
     model = ECNet(4, [4, 3, 3, 3], [24, 24, 24, 16], use_iaff=True, iaff_r=0.2)
     disc = Discriminator(256)
     outs = model(d)
