@@ -128,6 +128,8 @@ class Unet(nn.Module):
         if use_iaff:
             pw_convs = []
             iaffs = []
+            decoder_pw_convs = []
+            decoder_iaffs = []
         for i in range(layer_count - 1):
             if i == 0:
                 in_channels = 3
@@ -138,6 +140,11 @@ class Unet(nn.Module):
             if use_iaff:
                 pw_convs.append(PWConv(in_channels=in_channels, out_channels=out_channels, is_bn=True))
                 iaffs.append(IAFF(in_channels=out_channels, r=iaff_r))
+                decoder_pw_convs.append(nn.Sequential(
+                    nn.Upsample(scale_factor=2),
+                    PWConv(in_channels=2 * out_channels, out_channels=out_channels, is_bn=True)
+                ))
+                decoder_iaffs.append(IAFF(in_channels=out_channels, r=iaff_r))
             encoder.append(ConvBlock(in_channels=in_channels, out_channels=out_channels))
             decoder.extend([ConvBlock(in_channels=2 * out_channels, out_channels=out_channels), DeConvBlock(in_channels=out_channels * 2, out_channels=out_channels)])
         decoder.reverse()
@@ -145,8 +152,12 @@ class Unet(nn.Module):
         self.decoder = nn.ModuleList(decoder)
         self.pw = PWConv(in_channels=first_layer_out_channels, out_channels=3, is_bn=pw_is_bn)
         if use_iaff:
+            decoder_pw_convs.reverse()
+            decoder_iaffs.reverse()
             self.pw_convs = nn.ModuleList(pw_convs)
             self.iaffs = nn.ModuleList(iaffs)
+            self.decoder_pw_convs = nn.ModuleList(decoder_pw_convs)
+            self.decoder_iaffs = nn.ModuleList(decoder_iaffs)
 
     def forward(self, x):
         encoder_outputs = []
@@ -163,9 +174,13 @@ class Unet(nn.Module):
                 x_before = x
         x = self.middle(x)
         for i in range(0, (self.layer_count - 1) * 2, 2):
+            if self.use_iaff:
+                x_before = self.decoder_pw_convs[i // 2](x)
             x = self.decoder[i](x)
             x = t.cat([encoder_outputs.pop(), x], dim=1)
             x = self.decoder[i + 1](x)
+            if self.use_iaff:
+                x = self.decoder_iaffs[i // 2](x_before, x)
         x = self.pw(x)
         return x
 
@@ -236,7 +251,7 @@ class ECNet(nn.Module):
 
 
 if __name__ == "__main__":
-    d = [t.randn(4, 3, 64, 64), t.randn(4, 3, 128, 128), t.randn(4, 3, 256, 256), t.randn(4, 3, 512, 512)]
+    d = [t.randn(4, 3, 32, 32), t.randn(4, 3, 64, 64), t.randn(4, 3, 128, 128), t.randn(4, 3, 256, 256)]
     model = ECNet(4, [4, 3, 3, 3], [24, 24, 24, 16], use_iaff=True, iaff_r=0.2)
     disc = Discriminator(256)
     outs = model(d)
