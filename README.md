@@ -27,8 +27,8 @@ CUDA_VISIBLE_DEVICES: specify which GPUs to use, such as "0,1,..."
 num_workers: num_workers for data loader  
 model_save_dir: model weight output dir  
 laplacian_level_count: layers of laplacian pyramid, such as 4  
-layer_count_of_every_unet: layers of every sub unet, such as \[4, 3, 3, 3\]  
-first_layer_out_channels_of_every_unet: the number of output channels of the first layer of each unet encoder, such as \[24, 24, 24, 16\]  
+layer_count_of_every_unet: layers of every sub unet, such as \[4, 3, 3, 3\], the number of elements of layer_count_of_every_unet should be equal to laplacian_level_count  
+first_layer_out_channels_of_every_unet: the number of output channels of the first layer of each unet encoder, such as \[24, 24, 24, 16\], the number of elements of first_layer_out_channels_of_every_unet should be equal to laplacian_level_count
 color_jitter_brightness: color jitter parameter brightness, between 0 and 1  
 color_jitter_saturation: color jitter parameter saturation, between 0 and 1  
 color_jitter_contrast: color jitter parameter contrast, between 0 and 1  
