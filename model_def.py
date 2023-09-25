@@ -130,6 +130,8 @@ class Unet(nn.Module):
             iaffs = []
             decoder_pw_convs = []
             decoder_iaffs = []
+            self.middle_pw = PWConv(in_channels=2 ** (layer_count - 2) * first_layer_out_channels, out_channels=2 ** (layer_count - 1) * first_layer_out_channels, is_bn=True)
+            self.middle_iaff = IAFF(in_channels=2 ** (layer_count - 1) * first_layer_out_channels, r=iaff_r)
         for i in range(layer_count - 1):
             if i == 0:
                 in_channels = 3
@@ -172,7 +174,12 @@ class Unet(nn.Module):
             x = F.max_pool2d(x, kernel_size=2, stride=2)
             if self.use_iaff:
                 x_before = x
+        if self.use_iaff:
+            x_middle_before = x
         x = self.middle(x)
+        if self.use_iaff:
+            x_middle_before = self.middle_pw(x_middle_before)
+            x = self.middle_iaff(x_middle_before, x)
         for i in range(0, (self.layer_count - 1) * 2, 2):
             if self.use_iaff:
                 x_before = self.decoder_pw_convs[i // 2](x)
@@ -240,7 +247,7 @@ class ECNet(nn.Module):
                 # unet_out = self.bns[i](unet_out)
                 # unet_outs.append(unet_out)
                 if self.use_iaff:
-                    unet_out = self.iaffs[i](unet_out, x[i + 1])
+                    unet_out = self.iaffs[i](x[i + 1], unet_out)
                 else:
                     unet_out = unet_out + x[i + 1]
             out_before = unet_out
