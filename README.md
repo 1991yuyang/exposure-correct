@@ -15,9 +15,9 @@ discriminator_image_size: \[h, w\],indicates the size of the image sent to the d
 train_data_dir: training set directory path  
 valid_data_dir: validation set directory path  
 batch_size: batch size  
-init_lr: initial learning rate of main network model (or generative model)  
-final_lr: final learning rate of main network model (or generative model)  
-weight_decay: weight decay of main network model (or generative model)  
+init_lr: initial learning rate of main network model (or called generative model)  
+final_lr: final learning rate of main network model (or called generative model)  
+weight_decay: weight decay of main network model (or called generative model)  
 discriminator_weight_decay: weight decay of discriminator  
 discriminator_init_lr: initial learning rate of discriminator  
 discriminator_final_lr: final learning rate of discriminator  
