@@ -58,13 +58,6 @@ python predict.py
 ## Inference Results
 Due to limited computing resources, the original training for 1,000 epochs was forced to interrupt when the training reached the 486th epoch. Therefore, the following performance is the performance during training for 486 epochs. If the training can be completed for 1000 epochs, the performance should be better. 
 ### input
-<img src="https://github.com/1991yuyang/exposure-correct/blob/main/test/a0024-_DSC8932_0.JPG" width="256" height="256"><img src="https://github.com/1991yuyang/exposure-correct/blob/main/test/a0145-DSC_0009-1_P1.5.JPG" width="256" height="256"><img src="https://github.com/1991yuyang/exposure-correct/blob/main/test/a0113-IMG_1129_N1.5.JPG" width="256" height="256"><img src="https://github.com/1991yuyang/exposure-correct/blob/main/test/a0125-kme_314_N1.5.JPG" width="256" height="256">  
-![Image text](https://github.com/1991yuyang/exposure-correct/blob/main/test/a0024-_DSC8932_0.JPG)
-![Image text](https://github.com/1991yuyang/exposure-correct/blob/main/test/a0145-DSC_0009-1_P1.5.JPG)
-![Image text](https://github.com/1991yuyang/exposure-correct/blob/main/test/a0113-IMG_1129_N1.5.JPG)
-![Image text](https://github.com/1991yuyang/exposure-correct/blob/main/test/a0125-kme_314_N1.5.JPG)
+<img src="https://github.com/1991yuyang/exposure-correct/blob/main/test/a0024-_DSC8932_0.JPG" width="128" height="128"><img src="https://github.com/1991yuyang/exposure-correct/blob/main/test/a0145-DSC_0009-1_P1.5.JPG" width="128" height="128"><img src="https://github.com/1991yuyang/exposure-correct/blob/main/test/a0113-IMG_1129_N1.5.JPG" width="128" height="128"><img src="https://github.com/1991yuyang/exposure-correct/blob/main/test/a0125-kme_314_N1.5.JPG" width="128" height="128">  
 ### output
-![Image text](https://github.com/1991yuyang/exposure-correct/blob/main/results/a0024-_DSC8932_0.png)
-![Image text](https://github.com/1991yuyang/exposure-correct/blob/main/results/a0145-DSC_0009-1_P1.5.png)
-![Image text](https://github.com/1991yuyang/exposure-correct/blob/main/results/a0113-IMG_1129_N1.5.png)
-![Image text](https://github.com/1991yuyang/exposure-correct/blob/main/results/a0125-kme_314_N1.5.png)
+<img src="https://github.com/1991yuyang/exposure-correct/blob/main/test/a0024-_DSC8932_0.png" width="128" height="128"><img src="https://github.com/1991yuyang/exposure-correct/blob/main/test/a0145-DSC_0009-1_P1.5.png" width="128" height="128"><img src="https://github.com/1991yuyang/exposure-correct/blob/main/test/a0113-IMG_1129_N1.5.png" width="128" height="128"><img src="https://github.com/1991yuyang/exposure-correct/blob/main/test/a0125-kme_314_N1.5.png" width="128" height="128">  
