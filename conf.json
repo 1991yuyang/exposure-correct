@@ -38,5 +38,16 @@
     "show_result": false,
     "use_iaff": false,
     "iaff_r": 0.2
+  },
+  "convert_to_onnx":
+  {
+    "laplacian_level_count": 4,
+    "layer_count_of_every_unet": [4, 3, 3, 3],
+    "first_layer_out_channels_of_every_unet": [24, 24, 24, 16],
+    "pth_file_path": "./save_model/best.pth",
+    "use_iaff": false,
+    "iaff_r": 0.2,
+    "dummy_input_image_size": [512, 512],
+    "onnx_output_path": "./best.onnx"
   }
 }
