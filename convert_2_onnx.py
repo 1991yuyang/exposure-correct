@@ -17,6 +17,7 @@ pth_file_path = onnx_params["pth_file_path"]
 use_iaff = onnx_params["use_iaff"]
 dummy_input_image_size = onnx_params["dummy_input_image_size"]
 onnx_output_path = onnx_params["onnx_output_path"]
+dynamic_bhw = onnx_params["dynamic_bhw"]
 input_names = ["in%d" % (i,) for i in range(1, 1 + laplacian_level_count)]
 output_names = ["out%d" % (i,) for i in range(1, 1 + laplacian_level_count)]
 iaff_r = onnx_params["iaff_r"]
@@ -32,9 +33,11 @@ model.eval()
 
 
 names = input_names + output_names
-dynamic_axes = {name: {0: "batch", 2: "height", 3: "width"} for name in names}
 print("input_names:", input_names)
 print("output_names:", output_names)
-print("dynamic_axes:", dynamic_axes)
-
-torch.onnx.export(model, dummy_inputs, onnx_output_path, input_names=input_names, output_names=output_names, opset_version=12, dynamic_axes=dynamic_axes)
+if dynamic_bhw:
+    dynamic_axes = {name: {0: "batch", 2: "height", 3: "width"} for name in names}
+    print("dynamic_axes:", dynamic_axes)
+    torch.onnx.export(model, dummy_inputs, onnx_output_path, input_names=input_names, output_names=output_names, opset_version=12, dynamic_axes=dynamic_axes)
+else:
+    torch.onnx.export(model, dummy_inputs, onnx_output_path, input_names=input_names, output_names=output_names, opset_version=12)

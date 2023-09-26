@@ -48,6 +48,7 @@
     "use_iaff": false,
     "iaff_r": 0.2,
     "dummy_input_image_size": [512, 512],
-    "onnx_output_path": "./best.onnx"
+    "onnx_output_path": "./best.onnx",
+    "dynamic_bhw": true
   }
 }
