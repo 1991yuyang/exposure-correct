@@ -23,8 +23,9 @@ output_names = ["out%d" % (i,) for i in range(1, 1 + laplacian_level_count)]
 iaff_r = onnx_params["iaff_r"]
 
 
-dummy_inputs = rd.randint(0, 255, dummy_input_image_size + [3]).astype(np.uint8)
-dummy_inputs = [t.from_numpy(np.expand_dims(np.transpose(i, axes=[2, 0, 1]), axis=0).astype(np.float32)).type(t.FloatTensor) for i in generate_laplacian_pyram(dummy_inputs, laplacian_level_count)[0]]
+dummy_inputs = rd.randint(0, 255, dummy_input_image_size[2:] + [dummy_input_image_size[1]]).astype(np.uint8)
+batch_size = dummy_input_image_size[0]
+dummy_inputs = [t.cat([t.from_numpy(np.expand_dims(np.transpose(i, axes=[2, 0, 1]), axis=0).astype(np.float32)).type(t.FloatTensor)] * batch_size, dim=0) for i in generate_laplacian_pyram(dummy_inputs, laplacian_level_count)[0]]
 dummy_input_shapes = dict(list(zip(input_names, [list(i.size()) for i in dummy_inputs])))
 print("dummy_inputs_shapes:", dummy_input_shapes)
 model = ECNet(laplacian_level_count, layer_count_of_every_unet, first_layer_out_channels_of_every_unet, use_iaff, iaff_r)
