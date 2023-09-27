@@ -50,5 +50,17 @@
     "dummy_input_image_size": [2, 3, 512, 512],
     "onnx_output_path": "./best.onnx",
     "dynamic_bhw": false
+  },
+  "convert_to_rknn":
+  {
+    "ONNX_MODEL": "./best.onnx",
+    "RKNN_MODEL": "./best.rknn",
+    "laplacian_level_count": 4,
+    "rknn_batch_size": 1,
+    "target_platform": "rk3588",
+    "image_size": [512, 512],
+    "do_inference": true,
+    "inference_image_path": "",
+    "inference_out_path": "./rknn_result.png"
   }
 }
