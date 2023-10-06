@@ -11,7 +11,7 @@ class CA(nn.Module):
         self.wq = nn.Conv2d(in_channels=in_channels, out_channels=1, kernel_size=1, stride=1, padding=0, bias=True)
         self.last = nn.Sequential(
             nn.Conv2d(in_channels=in_channels // 2, out_channels=in_channels, kernel_size=1, stride=1, padding=0, bias=False),
-            nn.BatchNorm2d(num_features=in_channels),
+            nn.LayerNorm([in_channels, 1, 1]),
             nn.Sigmoid()
         )
 
