@@ -37,7 +37,8 @@
     "first_layer_out_channels_of_every_unet": [24, 24, 24, 16],
     "show_result": false,
     "use_iaff": false,
-    "iaff_r": 0.2
+    "iaff_r": 0.2,
+    "use_psa": false
   },
   "convert_to_onnx":
   {
@@ -47,6 +48,7 @@
     "pth_file_path": "./save_model/best.pth",
     "use_iaff": false,
     "iaff_r": 0.2,
+    "use_psa": false,
     "dummy_input_image_size": [2, 3, 512, 512],
     "onnx_output_path": "./best.onnx",
     "dynamic_bhw": false

@@ -2,6 +2,7 @@ import torch as t
 from torch import nn
 from torch.nn import functional as F
 from iaff import IAFF
+from psa import PSA
 
 
 class Discriminator(nn.Module):
@@ -109,7 +110,7 @@ class PWConv(nn.Module):
 
 class Unet(nn.Module):
 
-    def __init__(self, layer_count, first_layer_out_channels, pw_is_bn, use_iaff, iaff_r):
+    def __init__(self, layer_count, first_layer_out_channels, pw_is_bn, use_iaff, iaff_r, use_psa):
         """
 
         :param layer_count: unet的层数
@@ -117,9 +118,11 @@ class Unet(nn.Module):
         :param pw_is_bn: 最后的1*1卷积是否带bn层，True带bn，False不带
         :param use_iaff: 是否使用iaff注意力机制
         :param iaff_r: iaff注意力机制中的参数r
+        :param use_psa: 是否使用psa注意力
         """
         super(Unet, self).__init__()
         self.use_iaff = use_iaff
+        self.use_psa = use_psa
         self.layer_count = layer_count
         iaff_r *= 20
         encoder = []
@@ -160,6 +163,8 @@ class Unet(nn.Module):
             self.iaffs = nn.ModuleList(iaffs)
             self.decoder_pw_convs = nn.ModuleList(decoder_pw_convs)
             self.decoder_iaffs = nn.ModuleList(decoder_iaffs)
+        if use_psa:
+            self.psa = PSA(in_channels=first_layer_out_channels)
 
     def forward(self, x):
         encoder_outputs = []
@@ -188,6 +193,8 @@ class Unet(nn.Module):
             x = self.decoder[i + 1](x)
             if self.use_iaff:
                 x = self.decoder_iaffs[i // 2](x_before, x)
+        if self.use_psa:
+            x = self.psa(x)
         x = self.pw(x)
         return x
 
@@ -196,7 +203,7 @@ class ECNet(nn.Module):
     """
     exposure correction network
     """
-    def __init__(self, laplacian_level_count, layer_count_of_every_unet, first_layer_out_channels_of_every_unet, use_iaff, iaff_r):
+    def __init__(self, laplacian_level_count, layer_count_of_every_unet, first_layer_out_channels_of_every_unet, use_iaff, iaff_r, use_psa):
         """
 
         :param laplacian_level_count: 拉普拉斯金字塔层数
@@ -204,6 +211,7 @@ class ECNet(nn.Module):
         :param first_layer_out_channels_of_every_unet: 每个unet的第一层的输出通道数，为列表，列表长度等于laplacian_level_count
         :param use_iaff: 是否使用iaff注意力机制
         :param iaff_r: iaff注意力机制中的参数r
+        :param use_psa: 是否使用psa注意力
         """
         super(ECNet, self).__init__()
         unets = []
@@ -216,7 +224,7 @@ class ECNet(nn.Module):
         for i in range(laplacian_level_count):
             layer_count = layer_count_of_every_unet[i]
             first_layer_out_channels = first_layer_out_channels_of_every_unet[i]
-            unets.append(Unet(layer_count, first_layer_out_channels, pw_is_bn=not i == (laplacian_level_count - 1), use_iaff=use_iaff, iaff_r=iaff_r))
+            unets.append(Unet(layer_count, first_layer_out_channels, pw_is_bn=not i == (laplacian_level_count - 1), use_iaff=use_iaff, iaff_r=iaff_r, use_psa=use_psa))
             if i != self.laplacian_leve_count - 1:
                 deconvs.append(nn.ConvTranspose2d(in_channels=3, out_channels=3, kernel_size=2, stride=2, padding=0, bias=True))
                 if use_iaff:
@@ -259,7 +267,7 @@ class ECNet(nn.Module):
 
 if __name__ == "__main__":
     d = [t.randn(4, 3, 32, 32), t.randn(4, 3, 64, 64), t.randn(4, 3, 128, 128), t.randn(4, 3, 256, 256)]
-    model = ECNet(4, [4, 3, 3, 3], [24, 24, 24, 16], use_iaff=True, iaff_r=0.2)
+    model = ECNet(4, [4, 3, 3, 3], [24, 24, 24, 16], use_iaff=True, iaff_r=0.2, use_psa=False)
     disc = Discriminator(256)
     outs = model(d)
     recon = outs

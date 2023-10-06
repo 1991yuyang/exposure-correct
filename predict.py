@@ -34,7 +34,7 @@ def load_one_img(img_pth):
 
 
 def load_model():
-    model = ECNet(laplacian_level_count, layer_count_of_every_unet, first_layer_out_channels_of_every_unet, use_iaff, iaff_r)
+    model = ECNet(laplacian_level_count, layer_count_of_every_unet, first_layer_out_channels_of_every_unet, use_iaff, iaff_r, use_psa)
     model.load_state_dict(t.load(pretrained_model))
     model = model.cuda(0)
     model.eval()
@@ -91,4 +91,5 @@ if __name__ == "__main__":
     use_orig_size = predict_conf["use_orig_size"]
     use_iaff = predict_conf["use_iaff"]
     iaff_r = predict_conf["iaff_r"]
+    use_psa = predict_conf["use_psa"]
     main()
