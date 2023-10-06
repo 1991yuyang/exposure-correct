@@ -33,7 +33,8 @@ color_jitter_brightness: color jitter parameter brightness, between 0 and 1
 color_jitter_saturation: color jitter parameter saturation, between 0 and 1  
 color_jitter_contrast: color jitter parameter contrast, between 0 and 1  
 use_iaff: whether to use iaff attention mechanism  
-iaff_r: channel scaling parameters of iaff attention mechanism
+iaff_r: channel scaling parameters of iaff attention mechanism  
+use_psa: whether to use psa attention mechanism  
 ### Start Training 
 ```
 python train.py
@@ -52,6 +53,7 @@ first_layer_out_channels_of_every_unet: the number of output channels of the fir
 show_result: true will show inference result, false will not show the result  
 use_iaff: whether to use iaff attention mechanism should be consistent with that during training  
 iaff_r: channel scaling parameters of iaff attention mechanism should be consistent with that during training  
+use_psa: whether to use psa attention mechanism should be consistent with that during training  
 ### Start Inference 
 ```
 python predict.py
@@ -74,6 +76,7 @@ iaff_r: channel scaling parameters of iaff attention mechanism should be consist
 dummy_input_image_size: the size of the fake model input used to construct the onnx model should follow the input of \[N, C, H, W\], such as [2, 3, 512, 512]
 onnx_output_path: the saving path of the obtained onnx model  
 dynamic_bhw: whether to use dynamic dimensions for batch size, height, width  
+use_psa: whether to use psa attention mechanism should be consistent with that during training  
 ### Start Converting
 ```
 python convert_2_onnx.py
