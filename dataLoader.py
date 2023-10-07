@@ -11,10 +11,10 @@ import torch as t
 
 class MySet(data.Dataset):
 
-    def __init__(self, is_train, data_dir, image_size, color_jitter_brightness, color_jitter_saturation, laplacia_level_count, color_jitter_contrast):
+    def __init__(self, is_train, data_dir, image_size, color_jitter_brightness, color_jitter_saturation, laplacia_level_count, color_jitter_contrast, color_jitter_hue):
         self.img_pths = [os.path.join(data_dir, img_name) for img_name in os.listdir(data_dir)]
         image_size = (image_size, image_size) if isinstance(image_size, int) else image_size
-        self.color_jitter = T.ColorJitter(brightness=color_jitter_brightness, saturation=color_jitter_saturation, contrast=color_jitter_contrast)
+        self.color_jitter = T.ColorJitter(brightness=color_jitter_brightness, saturation=color_jitter_saturation, contrast=color_jitter_contrast, hue=color_jitter_hue)
         self.resize = T.Resize(image_size)
         self.totensor = T.ToTensor()
         self.is_train = is_train
@@ -55,8 +55,9 @@ class RandomCropNew(object):
             return img
         return img
 
-def make_loader(is_train, data_dir, image_size, color_jitter_brightness, color_jitter_saturation, batch_size, laplacia_level_count, num_workers, color_jitter_contrast):
-    loader = iter(data.DataLoader(MySet(is_train, data_dir, image_size, color_jitter_brightness, color_jitter_saturation, laplacia_level_count, color_jitter_contrast), batch_size=batch_size, shuffle=True, drop_last=True, num_workers=num_workers))
+
+def make_loader(is_train, data_dir, image_size, color_jitter_brightness, color_jitter_saturation, batch_size, laplacia_level_count, num_workers, color_jitter_contrast, color_jitter_hue):
+    loader = iter(data.DataLoader(MySet(is_train, data_dir, image_size, color_jitter_brightness, color_jitter_saturation, laplacia_level_count, color_jitter_contrast, color_jitter_hue), batch_size=batch_size, shuffle=True, drop_last=True, num_workers=num_workers))
     return loader
 
 

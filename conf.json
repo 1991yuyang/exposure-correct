@@ -22,6 +22,7 @@
     "color_jitter_brightness": 0.85,
     "color_jitter_saturation": 0.15,
     "color_jitter_contrast": 0.15,
+    "color_jitter_hue": 0.15,
     "use_iaff": false,
     "iaff_r": 0.2,
     "use_psa": false

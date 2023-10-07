@@ -113,8 +113,8 @@ def main():
     d_lr_sch = optim.lr_scheduler.CosineAnnealingLR(d_optimizer, T_max=epochs - begin_use_adv_loss_epoch + 1, eta_min=discriminator_final_lr)
     for e in range(epochs):
         current_epoch = e + 1
-        train_loader = make_loader(True, train_data_dir, image_size, color_jitter_brightness, color_jitter_saturation, batch_size, laplacian_level_count, num_workers, color_jitter_contrast)
-        valid_loader = make_loader(False, valid_data_dir, image_size, color_jitter_brightness, color_jitter_saturation, batch_size, laplacian_level_count, num_workers, color_jitter_contrast)
+        train_loader = make_loader(True, train_data_dir, image_size, color_jitter_brightness, color_jitter_saturation, batch_size, laplacian_level_count, num_workers, color_jitter_contrast, color_jitter_hue)
+        valid_loader = make_loader(False, valid_data_dir, image_size, color_jitter_brightness, color_jitter_saturation, batch_size, laplacian_level_count, num_workers, color_jitter_contrast, color_jitter_hue)
         model, discriminator = train_epoch(model, discriminator, recLoss, pyrLoss, advLoss, d_criterion, train_loader, current_epoch, begin_use_adv_loss_epoch, g_optimizer, d_optimizer, device_ids, epochs)
         model, discriminator = valid_epoch(model, discriminator, recLoss, pyrLoss, advLoss, valid_loader, current_epoch, begin_use_adv_loss_epoch, device_ids)
         g_lr_sch.step()
@@ -150,6 +150,7 @@ if __name__ == "__main__":
     weight_decay = train_conf["weight_decay"]
     discriminator_weight_decay = train_conf["discriminator_weight_decay"]
     color_jitter_contrast = train_conf["color_jitter_contrast"]
+    color_jitter_hue = train_conf["color_jitter_hue"]
     use_iaff = train_conf["use_iaff"]
     iaff_r = train_conf["iaff_r"]
     use_psa = train_conf["use_psa"]
