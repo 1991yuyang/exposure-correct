@@ -31,7 +31,7 @@ layer_count_of_every_unet: layers of every sub unet, such as \[4, 3, 3, 3\], the
 first_layer_out_channels_of_every_unet: the number of output channels of the first layer of each unet encoder, such as \[24, 24, 24, 16\], the number of elements of first_layer_out_channels_of_every_unet should be equal to laplacian_level_count  
 color_jitter_brightness: color jitter parameter brightness, between 0 and 1  
 color_jitter_saturation: color jitter parameter saturation, between 0 and 1  
-color_jitter_contrast: color jitter parameter contrast, between 0 and 1 
+color_jitter_contrast: color jitter parameter contrast, between 0 and 1  
 color_jitter_hue: color jitter parameter hue, between 0 and 0.5  
 use_iaff: whether to use iaff attention mechanism  
 iaff_r: channel scaling parameters of iaff attention mechanism  
