@@ -92,8 +92,8 @@ rknn_batch_size: the batch size of rknn model inference
 target_platform: hardware platform model such as "rk3588"  
 image_size: if you want to use the generated rknn model for simulation inference, specify the size of the image according to \[h, w\]  
 do_inference: whether to use the rknn model for simulation inference  
-inference_image_path: if you want to do simulation inference, specify the path of a picture  
-inference_out_path: if you want to do simulation inference, specify the output path of inference result   
+inference_image_paths: if you want to do simulation inference, specify the paths of a picture, should be a list, and the length of the list should be equal to rknn_batch_size
+inference_out_dir: if you want to do simulation inference, specify the output dir of inference result
 ### Start Converting
 ```
 python convert_2_rknn.py
