@@ -77,11 +77,16 @@ if __name__ == '__main__':
     print('done')
 
     if do_inference:
+        assert len(inference_image_paths) == rknn_batch_size, "rknn_batch_size should equal to the lenght of inference_image_paths"
         # Set inputs
         laplacian_pyr = []
+        orig_ws = []
+        orig_hs = []
         for inf_img_pth in inference_image_paths:
             pil_img = Image.open(inf_img_pth)
             original_w, original_h = pil_img.size
+            orig_ws.append(original_w)
+            orig_hs.append(original_h)
             pil_img_resized = resize(pil_img)
             resized_pil_img_bgr = cv2.cvtColor(np.array(pil_img_resized), cv2.COLOR_RGB2BGR)
             laplacian_pyr.append([np.expand_dims(cv2.cvtColor(i, cv2.COLOR_BGR2RGB).astype(np.float32), axis=0) / 255 for i in generate_laplacian_pyram(resized_pil_img_bgr, laplacian_level_count )[0]])
@@ -96,7 +101,7 @@ if __name__ == '__main__':
         outputs = rknn.inference(inputs=laplacian_pyr)
         for i in range(rknn_batch_size):
             out = cv2.cvtColor(np.array(to_pil(t.from_numpy(outputs[-1][i]))), cv2.COLOR_RGB2BGR)
-            result = cv2.resize(out, (original_w, original_h))
+            result = cv2.resize(out, (orig_ws[i], orig_hs[i]))
             cv2.imwrite(os.path.join(inference_out_dir, "%d.png" % (i,)), result)
 
     rknn.release()
