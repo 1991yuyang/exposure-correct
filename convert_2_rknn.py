@@ -98,9 +98,10 @@ if __name__ == '__main__':
 
         # Inference
         print('--> Running model')
-        outputs = rknn.inference(inputs=laplacian_pyr)
+        outputs = rknn.inference(inputs=laplacian_pyr)  # 是一个列表，每个元素为[N, C, H, W]形状
+        outputs = outputs[0]  # 形状为[N, C, H, W]
         for i in range(rknn_batch_size):
-            out = cv2.cvtColor(np.array(to_pil(t.from_numpy(outputs[-1][i]))), cv2.COLOR_RGB2BGR)
+            out = cv2.cvtColor(np.array(to_pil(t.from_numpy(outputs[i]))), cv2.COLOR_RGB2BGR)
             result = cv2.resize(out, (orig_ws[i], orig_hs[i]))
             cv2.imwrite(os.path.join(inference_out_dir, "%d.png" % (i,)), result)
 
