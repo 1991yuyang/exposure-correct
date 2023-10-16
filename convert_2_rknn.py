@@ -25,6 +25,8 @@ image_size = params["image_size"]
 do_inference = params["do_inference"]
 inference_image_paths = params["inference_image_paths"]
 inference_out_dir = params["inference_out_dir"]
+do_quant = params["do_quant"]
+dataset_txt_file_path = params["dataset_txt_file_path"]
 resize = T.Resize(image_size)
 to_pil = T.ToPILImage()
 
@@ -52,7 +54,7 @@ if __name__ == '__main__':
 
     # Build model
     print('--> Building model')
-    ret = rknn.build(do_quantization=False, dataset='./dataset.txt', rknn_batch_size=rknn_batch_size)
+    ret = rknn.build(do_quantization=do_quant, dataset=dataset_txt_file_path, rknn_batch_size=rknn_batch_size)
     if ret != 0:
         print('Build model failed!')
         exit(ret)

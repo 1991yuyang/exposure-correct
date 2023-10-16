@@ -65,6 +65,8 @@
     "image_size": [512, 512],
     "do_inference": true,
     "inference_image_paths": ["", ""],
-    "inference_out_dir": "."
+    "inference_out_dir": ".",
+    "do_quant": false,
+    "dataset_txt_file_path": "dataset.txt"
   }
 }
