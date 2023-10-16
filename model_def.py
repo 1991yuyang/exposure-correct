@@ -259,10 +259,10 @@ class ECNet(nn.Module):
                 else:
                     unet_out = unet_out + x[i + 1]
             out_before = unet_out
-        unet_out = (t.tanh(unet_out) + 1) / 2
-        unet_outs.append(unet_out)  # 每个unet的输出组成的列表，取值范围在0到1之间
         if t.onnx.is_in_onnx_export():
             return unet_out
+        unet_out = (t.tanh(unet_out) + 1) / 2
+        unet_outs.append(unet_out)  # 每个unet的输出组成的列表，取值范围在0到1之间
         # unet_outs.append(unet_out)
         return unet_outs
 
