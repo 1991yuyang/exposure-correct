@@ -36,6 +36,7 @@ color_jitter_hue: color jitter parameter hue, between 0 and 0.5
 use_iaff: whether to use iaff attention mechanism  
 iaff_r: channel scaling parameters of iaff attention mechanism  
 use_psa: whether to use psa attention mechanism  
+pretrained_g_weight: specify the weight path of the pre-trained model (or generative model)  
 ### Start Training 
 ```
 python train.py
