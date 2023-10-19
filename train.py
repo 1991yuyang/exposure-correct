@@ -109,7 +109,7 @@ def main():
     d_criterion = nn.CrossEntropyLoss().cuda(device_ids[0])
     g_optimizer = optim.Adam(params=model.parameters(), lr=init_lr, weight_decay=weight_decay)
     d_optimizer = optim.Adam(params=discriminator.parameters(), lr=discriminator_init_lr, weight_decay=discriminator_weight_decay)
-    g_lr_sch = optim.lr_scheduler.CosineAnnealingLR(g_optimizer, T_max=epochs, eta_min=final_lr)
+    g_lr_sch = optim.lr_scheduler.CosineAnnealingLR(g_optimizer, T_max=epochs // 2, eta_min=final_lr)
     d_lr_sch = optim.lr_scheduler.CosineAnnealingLR(d_optimizer, T_max=epochs - begin_use_adv_loss_epoch + 1, eta_min=discriminator_final_lr)
     for e in range(epochs):
         current_epoch = e + 1
