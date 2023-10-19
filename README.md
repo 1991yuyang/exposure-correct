@@ -37,6 +37,8 @@ use_iaff: whether to use iaff attention mechanism
 iaff_r: channel scaling parameters of iaff attention mechanism  
 use_psa: whether to use psa attention mechanism  
 pretrained_g_weight: specify the weight path of the pre-trained model (or generative model)  
+is_prune: whether to use prune operation  
+prune_amount: quantity of parameters to prune   
 ### Start Training 
 ```
 python train.py
