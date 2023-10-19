@@ -99,7 +99,7 @@ def valid_epoch(model, discriminator, recLoss, pyrLoss, advLoss, valid_loader, c
 def main():
     model = ECNet(laplacian_level_count, layer_count_of_every_unet, first_layer_out_channels_of_every_unet, use_iaff, iaff_r, use_psa)
     if pretrained_g_weight:
-        model.load_state_dict(pretrained_g_weight, strict=False)
+        model.load_state_dict(t.load(pretrained_g_weight), strict=False)
     discriminator = Discriminator(discriminator_image_size)
     model = nn.DataParallel(module=model, device_ids=device_ids)
     discriminator = nn.DataParallel(module=discriminator, device_ids=device_ids)
