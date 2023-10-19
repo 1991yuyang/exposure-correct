@@ -6,6 +6,7 @@ import torch as t
 import os
 from torch import nn, optim
 from tools import calc_pnsr
+from prun import prune_model
 
 
 def train_epoch(model, discriminator, recLoss, pyrLoss, advLoss, d_criterion, train_loader, current_epoch, begin_use_adv_loss_epoch, g_optimizer, d_optimizer, device_ids, epochs):
@@ -119,6 +120,8 @@ def main():
         valid_loader = make_loader(False, valid_data_dir, image_size, color_jitter_brightness, color_jitter_saturation, batch_size, laplacian_level_count, num_workers, color_jitter_contrast, color_jitter_hue)
         model, discriminator = train_epoch(model, discriminator, recLoss, pyrLoss, advLoss, d_criterion, train_loader, current_epoch, begin_use_adv_loss_epoch, g_optimizer, d_optimizer, device_ids, epochs)
         model, discriminator = valid_epoch(model, discriminator, recLoss, pyrLoss, advLoss, valid_loader, current_epoch, begin_use_adv_loss_epoch, device_ids)
+        if is_prune:
+            model = prune_model(model, prune_amount)
         g_lr_sch.step()
         if current_epoch >= begin_use_adv_loss_epoch:
             d_lr_sch.step()
@@ -157,4 +160,6 @@ if __name__ == "__main__":
     iaff_r = train_conf["iaff_r"]
     use_psa = train_conf["use_psa"]
     pretrained_g_weight = train_conf["pretrained_g_weight"]
+    is_prune = train_conf["is_prune"]
+    prune_amount = train_conf["prune_amount"]
     main()

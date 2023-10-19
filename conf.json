@@ -26,7 +26,9 @@
     "use_iaff": false,
     "iaff_r": 0.2,
     "use_psa": false,
-    "pretrained_g_weight": ""
+    "pretrained_g_weight": "",
+    "is_prune": true,
+    "prune_amount": 0.3
   },
   "predict":
   {
