@@ -58,7 +58,7 @@ def train_epoch(model, discriminator, recLoss, pyrLoss, advLoss, d_criterion, tr
     return model, discriminator
 
 
-def valid_epoch(model, discriminator, recLoss, pyrLoss, advLoss, valid_loader, current_eopch, begin_use_adv_loss_epoch, device_ids):
+def valid_epoch(model, discriminator, recLoss, pyrLoss, advLoss, valid_loader, current_eopch, begin_use_adv_loss_epoch, device_ids, is_after_prune):
     global best_psnr
     model.eval()
     discriminator.eval()
@@ -88,7 +88,10 @@ def valid_epoch(model, discriminator, recLoss, pyrLoss, advLoss, valid_loader, c
     avg_adv_loss = accum_advloss / steps
     avg_psnr = accum_psnr / steps
     avg_total_loss = avg_rec_loss + avg_pyr_loss + avg_adv_loss
-    print("###########valid epoch:%d###########" % (current_eopch,))
+    if not is_after_prune:
+    	print("###########valid epoch:%d###########" % (current_eopch,))
+    else:
+    	print("###########valid after prune epoch:%d###########" % (current_eopch,))
     print("rec_loss:%.5f, pyr_loss:%.5f, adv_loss:%.5f, g_total_loss:%.5f, psnr:%.5f" % (avg_rec_loss, avg_pyr_loss, avg_adv_loss, avg_total_loss, avg_psnr))
     if avg_psnr > best_psnr:
         print("saving best model......")
@@ -119,9 +122,11 @@ def main():
         train_loader = make_loader(True, train_data_dir, image_size, color_jitter_brightness, color_jitter_saturation, batch_size, laplacian_level_count, num_workers, color_jitter_contrast, color_jitter_hue)
         valid_loader = make_loader(False, valid_data_dir, image_size, color_jitter_brightness, color_jitter_saturation, batch_size, laplacian_level_count, num_workers, color_jitter_contrast, color_jitter_hue)
         model, discriminator = train_epoch(model, discriminator, recLoss, pyrLoss, advLoss, d_criterion, train_loader, current_epoch, begin_use_adv_loss_epoch, g_optimizer, d_optimizer, device_ids, epochs)
-        model, discriminator = valid_epoch(model, discriminator, recLoss, pyrLoss, advLoss, valid_loader, current_epoch, begin_use_adv_loss_epoch, device_ids)
+        model, discriminator = valid_epoch(model, discriminator, recLoss, pyrLoss, advLoss, valid_loader, current_epoch, begin_use_adv_loss_epoch, device_ids, False)
         if is_prune:
             model = prune_model(model, prune_amount)
+            valid_loader = make_loader(False, valid_data_dir, image_size, color_jitter_brightness, color_jitter_saturation, batch_size, laplacian_level_count, num_workers, color_jitter_contrast, color_jitter_hue)
+            model, discriminator = valid_epoch(model, discriminator, recLoss, pyrLoss, advLoss, valid_loader, current_epoch, begin_use_adv_loss_epoch, device_ids, True)
         g_lr_sch.step()
         if current_epoch >= begin_use_adv_loss_epoch:
             d_lr_sch.step()
