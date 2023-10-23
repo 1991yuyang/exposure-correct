@@ -22,7 +22,8 @@ class MySet(data.Dataset):
         if is_train:
             self.transformer = T.Compose([
                 T.RandomVerticalFlip(p=0.5),
-                T.RandomHorizontalFlip(p=0.5)
+                T.RandomHorizontalFlip(p=0.5),
+                RandomCropNew(h_ratio_range=[0.3, 0.8], w_ratio_range=[0.3, 0.8], p=0.5)
             ])
 
     def __getitem__(self, index):
@@ -44,14 +45,25 @@ class MySet(data.Dataset):
 
 class RandomCropNew(object):
 
-    def __init__(self, size, p):
+    def __init__(self, h_ratio_range, w_ratio_range, p):
         self.p = p
-        self.random_crop = T.RandomCrop(size=size)
+        self.h_ratio_range = h_ratio_range
+        self.w_ratio_range = w_ratio_range
 
     def __call__(self, img):
         _p = rd.uniform(0, 1)
         if _p < self.p:
-            img = self.random_crop(img)
+            w, h = img.size
+            h_ratio = rd.uniform(self.h_ratio_range[0], self.h_ratio_range[1])
+            w_ratio = rd.uniform(self.w_ratio_range[0], self.w_ratio_range[1])
+            new_w = int(w_ratio * w)
+            new_h = int(h_ratio * h)
+            w_begin = rd.randint(0, w - new_w)
+            h_begin = rd.randint(0, h - new_h)
+            w_end = w_begin + new_w
+            h_end = h_begin + new_h
+            img_array = np.array(img)
+            img = Image.fromarray(img_array[h_begin:h_end, w_begin:w_end, :])
             return img
         return img
 
