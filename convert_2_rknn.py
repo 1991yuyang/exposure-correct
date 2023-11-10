@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
     # pre-process config
     print('--> config model')
-    rknn.config(mean_values=[[0, 0, 0]] * laplacian_level_count , std_values=[[1, 1, 1]] * laplacian_level_count , target_platform=target_platform, quant_img_RGB2BGR=[False] * laplacian_level_count )
+    rknn.config(mean_values=[[0, 0, 0]] * laplacian_level_count , std_values=[[255, 255, 255]] * laplacian_level_count , target_platform=target_platform, quant_img_RGB2BGR=[False] * laplacian_level_count )
     print('done')
 
 
@@ -91,7 +91,7 @@ if __name__ == '__main__':
             orig_hs.append(original_h)
             pil_img_resized = resize(pil_img)
             resized_pil_img_bgr = cv2.cvtColor(np.array(pil_img_resized), cv2.COLOR_RGB2BGR)
-            laplacian_pyr.append([np.expand_dims(cv2.cvtColor(i, cv2.COLOR_BGR2RGB).astype(np.float32), axis=0) / 255 for i in generate_laplacian_pyram(resized_pil_img_bgr, laplacian_level_count )[0]])
+            laplacian_pyr.append([np.expand_dims(cv2.cvtColor(i, cv2.COLOR_BGR2RGB), axis=0) for i in generate_laplacian_pyram(resized_pil_img_bgr, laplacian_level_count )[0]])
         if rknn_batch_size > 1:
             laplacian_pyr = [np.concatenate(i, axis=0) for i in zip(*laplacian_pyr)]
         else:
